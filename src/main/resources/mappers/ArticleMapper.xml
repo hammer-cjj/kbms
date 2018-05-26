@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsga.kbms.dao.ArticleDao">
+
+	<resultMap type="Article" id="ArticleResult">
+		<result property="id" column="id"/>
+		<result property="title" column="title"/>
+		<result property="summary" column="summary"/>
+		<result property="releaseDate" column="releasedate"/>
+		<result property="releaseDateStr" column="releaseDateStr"/>
+		<result property="articleCount" column="articleCount"/>
+		<result property="clickHit" column="clickhit"/>
+		<result property="replyHit" column="replyhit"/>
+		<result property="content" column="content"/>
+		<result property="keyWord" column="keyword"/>
+		<association  property="articleType" column="typeid" javaType="ArticleType">
+			<id property="id" column="typeid" />
+			<result property="typeName" column="typename"/>
+		</association>
+		<association property="user" column="userid" javaType="User">
+			<id property="id" column="userid" />
+			<result property="userName" column="username" />
+		</association>
+	</resultMap>
+	
+	<select id="countTop5List" resultMap="ArticleResult">
+		SELECT
+			DATE_FORMAT(releaseDate, '%Y年%m月') AS releaseDateStr,
+			COUNT(*) AS articleCount
+		FROM
+			t_article
+		GROUP BY
+			DATE_FORMAT(releaseDate, '%Y年%m月')
+		ORDER BY
+			DATE_FORMAT(releaseDate, '%Y年%m月') DESC
+		LIMIT 5
+	</select>
+	
+	<select id="queryWenku" parameterType="Map" resultMap="ArticleResult">
+		SELECT
+			t1.id,
+			t1.title,
+			t1.summary,
+			t1.releasedate,
+			t1.clickhit,
+			t1.replyhit,
+			t1.content,
+			t1.keyword,
+			t1.typeid,
+			t1.userid,
+			t2.typename,
+			t3.username
+		FROM
+			t_article t1,
+			t_article_type t2,
+			t_user t3
+		<where>
+			t1.userid = t3.id AND t1.typeid = t2.id 
+			<if test="title!=null and title!='' ">
+				and t1.title like "%"#{title}"%"
+			</if>
+			<if test="typeId!=null and typeId!='' ">
+				and t1.typeid = #{typeId}
+			</if>
+			<if test="startTime!=null and startTime!='' ">
+				and t1.releasedate &gt;= str_to_date(#{startTime}, '%Y-%m-%d')
+			</if>
+			<if test="endTime!=null and endTime!='' ">
+				and t1.releasedate &lt;= str_to_date(#{endTime}, '%Y-%m-%d')
+			</if>
+		</where>	
+		ORDER BY
+			t1.releasedate DESC
+	</select>
+	
+	<select id="queryArticle" parameterType="Map" resultMap="ArticleResult">
+		SELECT
+			t1.id,
+			t1.title,
+			t1.summary,
+			t1.releasedate,
+			t1.clickhit,
+			t1.replyhit,
+			t1.content,
+			t1.keyword,
+			t1.typeid,
+			t1.userid,
+			t2.typename,
+			t3.username
+		FROM
+			t_article t1,
+			t_article_type t2,
+			t_user t3
+		<where>
+			t1.typeid = t2.id AND t1.userid = t3.id
+		    <if test="title!=null and title!='' ">
+				and t1.title like #{title}
+			</if>
+			<if test="typeId!=null and typeId!='' ">
+				and t1.typeid = #{typeId}
+			</if>
+			<if test="releaseDateStr!=null and releaseDateStr!='' ">
+				and DATE_FORMAT(t1.releasedate,'%Y年%m月') = #{releaseDateStr}
+			</if>
+			<if test="userId != null and userId !=''">
+				and t1.userid = #{userId}
+			</if>
+		</where>
+		order by releasedate desc
+	</select>
+	
+	<select id="queryArticleById" parameterType="Integer" resultMap="ArticleResult">
+		SELECT
+			t1.id,
+			t1.title,
+			t1.summary,
+			t1.releasedate,
+			t1.clickhit,
+			t1.replyhit,
+			t1.content,
+			t1.keyword,
+			t1.typeid,
+			t1.userid,
+			t2.typename,
+			t3.username
+		FROM
+			t_article t1,
+			t_article_type t2,
+			t_user t3
+		WHERE
+			t1.typeid = t2.id
+		AND t1.userid = t3.id
+		AND t1.id = #{id}
+	</select>
+	
+	<update id="updateArticle" parameterType="Article">
+		update t_article
+		<set>
+			<if test="title!=null and title!='' ">
+				title=#{title},
+			</if>
+			<if test="summary!=null and summary!='' ">
+				summary=#{summary},
+			</if>
+			<if test="content!=null and content!='' ">
+				content=#{content},
+			</if>
+			<if test="articleType.id!=null ">
+				typeid=#{articleType.id},
+			</if>
+			<if test="clickHit!=null ">
+				clickhit=#{clickHit},
+			</if>
+			<if test="replyHit!=null ">
+				replyhit=#{replyHit},
+			</if>
+			<if test="keyWord!=null and keyWord!='' ">
+				keyword=#{keyWord},
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+	
+	<insert id="insertArticle" useGeneratedKeys="true" keyProperty="id" parameterType="Article" >
+		insert into t_article values(null,#{title},#{summary},now(),0,0,#{content},#{keyWord},#{articleType.id},#{user.id})
+	</insert>
+	
+	<delete id="deleteArticle" parameterType="Integer">
+		delete from t_article where id=#{id}
+	</delete>
+	
+	<select id="queryLastArticle" parameterType="Integer" resultMap="ArticleResult">
+		SELECT
+			t1.id,
+			t1.title,
+			t1.summary,
+			t1.releasedate,
+			t1.clickhit,
+			t1.replyhit,
+			t1.content,
+			t1.keyword,
+			t1.typeid,
+			t1.userid,
+			t2.typename,
+			t3.username
+		FROM
+			t_article t1,
+			t_article_type t2,
+			t_user t3
+		WHERE
+			t1.typeid = t2.id
+		AND t1.userid = t3.id
+		AND t1.id &lt; #{id}
+		ORDER BY
+			id DESC
+		LIMIT 1
+	</select>
+	
+	<select id="queryNextArticle" parameterType="Integer" resultMap="ArticleResult">
+		SELECT
+			t1.id,
+			t1.title,
+			t1.summary,
+			t1.releasedate,
+			t1.clickhit,
+			t1.replyhit,
+			t1.content,
+			t1.keyword,
+			t1.typeid,
+			t1.userid,
+			t2.typename,
+			t3.username
+		FROM
+			t_article t1,
+			t_article_type t2,
+			t_user t3
+		WHERE
+			t1.typeid = t2.id
+		AND t1.userid = t3.id
+		AND t1.id &gt; #{id}
+		ORDER BY
+			id ASC
+		LIMIT 1
+	</select>
+	
+	<select id="countByArticleTyId" parameterType="Integer" resultType="Integer">
+		SELECT
+			count(*)
+		FROM
+			t_article
+		WHERE
+			typeid = #{id}
+	</select>
+</mapper> 

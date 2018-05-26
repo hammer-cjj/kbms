@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsga.kbms.dao.ArticleTypeDao">
+
+	<resultMap type="ArticleType" id="ArticleTypeResult">
+		<result property="id" column="id"/>
+		<result property="typeName" column="typename"/>
+		<result property="articleCount" column="articlecount"/>
+		<result property="orderNo" column="orderno"/>
+		<result property="level" column="level"/>
+		<result property="parentId" column="parentid"/>
+	</resultMap>
+	
+	<sql id="ArticleTypeColumns">
+		id,typename,articlecount,orderno,level,parentid
+	</sql>
+	
+	<select id="countTop5List" resultMap="ArticleTypeResult">
+		SELECT
+			t2.id,
+			t2.typename,
+			COUNT(t1.id) AS articlecount
+		FROM
+			t_article t1
+		RIGHT JOIN t_article_type t2 ON t1.typeid = t2.id
+		WHERE
+			t2. LEVEL = 2
+		GROUP BY
+			t2.typename
+		ORDER BY
+			articlecount DESC
+		LIMIT 5
+	</select>
+	
+	<select id="countList" resultMap="ArticleTypeResult">
+		SELECT
+			t2.id,
+			t2.typename,
+			COUNT(t1.id) AS articlecount
+		FROM
+			t_article t1
+		RIGHT JOIN t_article_type t2 ON t1.typeid = t2.id
+		WHERE
+			t2. LEVEL = 2
+		GROUP BY
+			t2.typename
+		ORDER BY
+			t2.id,
+			t2.orderno
+	</select>
+	
+	<select id="queryArticleType" resultMap="ArticleTypeResult">
+		select 	<include refid="ArticleTypeColumns" ></include>
+		from t_article_type order by level,parentid,orderno
+	</select>
+	
+	<select id="queryChildrenArticleType" parameterType="Integer" resultType="Integer">
+		select count(*) from t_article_type where parentid=#{parentId}
+	</select>
+	
+	<select id="queryArticleTypeById" parameterType="Integer" resultMap="ArticleTypeResult">
+		select <include refid="ArticleTypeColumns" ></include>
+		from t_article_type where id=#{id}
+	</select>
+	
+	<insert id="insertArticleType" parameterType="ArticleType" useGeneratedKeys="true">
+		insert into t_article_type
+		<!-- 动态sql拼接 prefix前缀 suffix后缀 suffixOverrides除去最后多余的,-->
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="typeName != null and typeName != ''">
+				typename,
+			</if>
+			<if test="orderNo != null and orderNo != ''">
+				orderno,
+			</if>
+			articlecount,
+			<if test="level != null and level != ''">
+				level,
+			</if>
+			parentid,
+		</trim>
+		<trim prefix="value(" suffix=")" suffixOverrides=",">
+			<if test="typeName != null and typeName != ''">
+				#{typeName},
+			</if>
+			<if test="orderNo != null and orderNo != ''">
+				#{orderNo},
+			</if>
+			#{articleCount},
+			<if test="level != null and level != ''">
+				#{level},
+			</if>
+			#{parentId},
+		</trim>
+	</insert>
+	
+	<update id="updateArticleType" parameterType="ArticleType">
+		update t_article_type
+		<set>
+			<if test="typeName != null and typeName != ''">
+				typename = #{typeName},
+			</if>
+			<if test="orderNo != null and orderNo != ''">
+				orderno = #{orderNo},
+			</if>
+			<if test="articleCount != null and articleCount != ''">
+				articlecount = #{articleCount},
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="deleteArticleType" parameterType="Integer">
+		delete from t_article_type where id=#{id}
+	</delete>
+</mapper> 

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsga.kbms.dao.LinkDao">
+
+	<resultMap type="Link" id="LinkResult">
+		<result property="id" column="id"/>
+		<result property="linkName" column="linkname"/>
+		<result property="linkUrl" column="linkurl"/>
+		<result property="orderNo" column="orderno"/>
+	</resultMap>
+	
+	<select id="queryLink" resultMap="LinkResult">
+		SELECT * FROM t_link ORDER BY orderno
+	</select>
+	
+	<select id="queryTop5Link" resultMap="LinkResult">
+		SELECT * FROM t_link ORDER BY orderno LIMIT 5
+	</select>
+	
+	<insert id="insertLink" parameterType="Link" useGeneratedKeys="true">
+		insert into t_link
+		<!-- 动态sql拼接 prefix前缀 suffix后缀 suffixOverrides除去最后多余的,-->
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="linkName != null and linkName != ''">
+				linkname,
+			</if>
+			<if test="orderNo != null and orderNo != ''">
+				orderno,
+			</if>
+			<if test="linkUrl != null and linkUrl != ''">
+				linkurl,
+			</if>
+		</trim>
+		<trim prefix="value(" suffix=")" suffixOverrides=",">
+			<if test="linkName != null and linkName != ''">
+				#{linkName},
+			</if>
+			<if test="orderNo != null and orderNo != ''">
+				#{orderNo},
+			</if>
+			<if test="linkUrl != null and linkUrl != ''">
+				#{linkUrl},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="updateLink" parameterType="Link">
+		update t_link
+		<set>
+			<if test="linkName!=null and linkName!='' ">
+				linkname=#{linkName},
+			</if>
+			<if test="linkUrl!=null and linkUrl!='' ">
+				linkurl=#{linkUrl},
+			</if>
+			<if test="orderNo!=null">
+				orderno=#{orderNo},
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+	
+	<delete id="deleteLink" parameterType="Integer">
+		delete from t_link where id = #{id}
+	</delete>
+</mapper> 

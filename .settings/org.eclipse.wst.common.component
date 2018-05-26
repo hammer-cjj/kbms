@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-modules id="moduleCoreId" project-version="1.7.0">
+    <wb-module deploy-name="kbms">
+        <wb-resource deploy-path="/" source-path="/src/main/webapp"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <property name="context-root" value="/kbms"/>
+        <property name="java-output-path" value="/kbms/src/main/webapp/WEB-INF/classes"/>
+    </wb-module>
+</project-modules>

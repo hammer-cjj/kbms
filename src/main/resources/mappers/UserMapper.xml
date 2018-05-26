@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsga.kbms.dao.UserDao">
+
+	<resultMap type="User" id="UserResult">
+		<result property="id" column="id"/>
+		<result property="userName" column="username"/>
+		<result property="password" column="password"/>
+		<result property="nickName" column="nickname"/>
+		<result property="sign" column="sign"/>
+		<result property="proFile" column="profile"/>
+		<result property="imageName" column="imagename"/>
+		<result property="manage" column="manage"/>
+	</resultMap>
+	
+	<sql id="UserColumns">
+		id,username,password,nickname,sign,profile,imagename,manage
+	</sql>
+	
+	<select id="query"  resultMap="UserResult">
+		select * from t_user where id=1;
+	</select>
+	
+	<select id="queryUsers" resultMap="UserResult">
+		select <include refid="UserColumns"></include>  from t_user
+	</select>
+	
+	<select id="queryUserByUserNameAndPassword" parameterType="User" resultMap="UserResult">
+		select <include refid="UserColumns"></include> 
+		from t_user where username=#{userName} and password=#{password}
+	</select>
+	
+	<update id="updateUser" parameterType="User">
+		update t_user
+		<set>
+			<if test="password!=null and password!='' ">
+				password=#{password},
+			</if>
+			<if test="nickName!=null and nickName!='' ">
+				nickname=#{nickName},
+			</if>
+			<if test="sign!=null and sign!='' ">
+				sign=#{sign},
+			</if>
+			<if test="proFile!=null and proFile!='' ">
+				profile=#{proFile},
+			</if>
+			<if test="imageName!=null and imageName!='' ">
+				imagename=#{imageName},
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+</mapper> 

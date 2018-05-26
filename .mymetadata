@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="kbms"
+  id="myeclipse.1526005434803"
+  context-root="/kbms"
+  j2ee-spec="1.7"
+  archive="kbms.war">
+  <attributes>
+    <attribute name="webrootdir" value="src/main/webapp" />
+  </attributes>
+</project-module>
+

@@ -135,7 +135,7 @@ public class ArticleAdminController {
 	 */
 	@RequestMapping("/delete")
 	@ResponseBody
-	public Map<String, Object> delete(@RequestParam("ids")String ids) {
+	public Map<String, Object> delete(@RequestParam("ids")String ids, HttpServletRequest request) {
 		Map<String, Object> modelMap = new HashMap<String, Object>();
 		String []idsStr=ids.split(",");
 		try {
@@ -144,6 +144,13 @@ public class ArticleAdminController {
 				articleIndex.deleteIndex(idsStr[i]); // 删除对应文章的索引
 				modelMap.put("success", true);
 			}
+			ServletContext application=RequestContextUtils.getWebApplicationContext(request).getServletContext();
+			//获取前五文章信息类别和对应类别下的文章数量
+			List<ArticleType> articleTypeTop5List = articleTypeService.countTop5List();
+			application.setAttribute("articleTypeTop5List", articleTypeTop5List);
+			//获取前五文章发布日期和对应月份下的文章数量
+			List<Article> articleTop5List = articleService.countTop5List();
+			application.setAttribute("articleTop5List", articleTop5List);
 		} catch (Exception e) {
 			modelMap.put("success", false);
 			modelMap.put("error", e.getMessage());

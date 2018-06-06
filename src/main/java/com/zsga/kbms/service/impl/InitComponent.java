@@ -41,8 +41,9 @@ public class InitComponent implements ServletContextListener,ApplicationContextA
 		
 		ArticleTypeService articleTypeService = applicationContext.getBean(ArticleTypeService.class);
 		//获取全部文章信息类别和对应类别下的文章数量
-		List<ArticleType> articleTypeList = articleTypeService.countList();
-		application.setAttribute("articleTypeList", articleTypeList);
+//		List<ArticleType> articleTypeList = articleTypeService.countList();
+//		application.setAttribute("articleTypeList", articleTypeList);
+		
 		//获取前五文章信息类别和对应类别下的文章数量
 		List<ArticleType> articleTypeTop5List = articleTypeService.countTop5List();
 		application.setAttribute("articleTypeTop5List", articleTypeTop5List);

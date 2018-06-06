@@ -38,8 +38,6 @@
 			},"json");
 		}
 	}
-
-
 </script>
 </head>
 <body style="margin: 10px">
@@ -52,7 +50,7 @@
    		<tr>
    			<td>所属类别：</td>
    			<td>
-   				<select class="easyui-combobox" style="width: 154px" id="articleTypeId" name="a" editable="false" panelHeight="auto" >
+   				<select class="easyui-combobox" style="width: 154px" id="articleTypeId" name="a" editable="false" panelHeight="auto">
 					<option value="">请选择文章类别...</option>	
 				    <c:forEach var="articleType" items="${articleTypeList }">
 				    	<option value="${articleType.id }">${articleType.typeName }</option>
@@ -112,9 +110,7 @@
             }
         );
     });
-    
-    
-   
+
 </script>
 </body>
 </html>

@@ -30,7 +30,8 @@
 		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
 		      <ul class="nav navbar-nav">
 		        <li><a href="${pageContext.request.contextPath}/wenku.html"><font color="black"><strong>文库</strong></font></a></li>
-		        <li><a href="${pageContext.request.contextPath}/login.jsp"><font color="black"><strong>登录</strong></font></a></li>
+		        <li><a href="${pageContext.request.contextPath}/admin/main.jsp"><font color="black"><strong>发布文章</strong></font></a></li>
+		        <li><a href="${pageContext.request.contextPath}/admin/user/logout.do"><font color="black"><strong>退出登录</strong></font></a></li>
 		      </ul>
 		      <form action="${pageContext.request.contextPath}/article/q.html" class="navbar-form navbar-right" role="search" method="post" onsubmit="return checkData()">
 		        <div class="form-group" >

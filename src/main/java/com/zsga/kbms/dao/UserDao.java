@@ -19,6 +19,20 @@ public interface UserDao {
 	public User query();
 	
 	/**
+	 * 根据用户ID添加权限
+	 * @param user
+	 * @return
+	 */
+	public int addRoles(User user);
+	
+	/**
+	 * 根据用户ID查找用户信息
+	 * @param id
+	 * @return
+	 */
+	public User queryUserById(Integer id);
+	
+	/**
 	 * 根据用户名和密码查询用户信息
 	 * @param user
 	 * @return

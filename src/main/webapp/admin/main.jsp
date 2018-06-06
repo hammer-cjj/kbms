@@ -127,6 +127,9 @@
 				<!-- <a href="javascript:openTab('评论审核','commentReview.jsp','icon-review')" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-review'" style="width: 150px">评论审核</a> -->
 				<a href="javascript:openTab('评论信息管理','commentManage.jsp','icon-plgl')" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-plgl'" style="width: 150px;">评论信息管理</a>
 			</div>
+			<div title="用户权限管理" data-options="iconCls:'icon-review'" style="padding:10px">
+				<a href="javascript:openTab('用户权限管理','user.jsp','icon-review')" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-review'" style="width: 150px;">用户权限管理</a>
+			</div>
 			</c:if>
 			<!-- 
 			<div title="个人信息管理"  data-options="iconCls:'icon-grxx'" style="padding:10px">

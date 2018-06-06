@@ -26,14 +26,23 @@
 		<filter-name>encodingFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	
+	<!-- 
+	<filter>  
+	    <filter-name>FilterIP</filter-name>  
+	    <filter-class>com.zsga.kbms.filters.IpFilter</filter-class>  
+	</filter>  
+	<filter-mapping>  
+		<filter-name>FilterIP</filter-name>  
+	    <url-pattern>/*</url-pattern>  
+	</filter-mapping>  
+	 -->
 	<filter>
-		<filter-name>jspFilter</filter-name>
-		<filter-class>com.zsga.kbms.filters.JspFilter</filter-class>
+		<filter-name>loginFilter</filter-name>
+		<filter-class>com.zsga.kbms.filters.LoginFilter</filter-class>
 	</filter>
 	<filter-mapping>
-		<filter-name>jspFilter</filter-name>
-		<url-pattern>/admin/*</url-pattern>
+		<filter-name>loginFilter</filter-name>
+		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	
 	<!-- Spring监听器 -->

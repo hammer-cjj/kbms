@@ -40,6 +40,7 @@
 				<div class="userSign">(${blogger.sign })</div>
 			</div>
 			-->
+		<div class="col-md-3">	
 			<div class="data_list">
 				<div class="data_list_title">
 					<img src="${kbms}/static/images/byType_icon.png"/>

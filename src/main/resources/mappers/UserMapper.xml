@@ -13,14 +13,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="proFile" column="profile"/>
 		<result property="imageName" column="imagename"/>
 		<result property="manage" column="manage"/>
+		<result property="role" column="role"/>
 	</resultMap>
 	
 	<sql id="UserColumns">
-		id,username,password,nickname,sign,profile,imagename,manage
+		id,username,password,nickname,sign,profile,imagename,manage,role
 	</sql>
 	
 	<select id="query"  resultMap="UserResult">
 		select * from t_user where id=1;
+	</select>
+	
+	<select id="queryUserById" parameterType="Integer" resultMap="UserResult">
+		select <include refid="UserColumns"></include>  from t_user where id=#{id}
 	</select>
 	
 	<select id="queryUsers" resultMap="UserResult">
@@ -31,6 +36,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select <include refid="UserColumns"></include> 
 		from t_user where username=#{userName} and password=#{password}
 	</select>
+	
+	<update id="addRoles" parameterType="User">
+		update t_user set role = #{role} where id = #{id}
+	</update>
 	
 	<update id="updateUser" parameterType="User">
 		update t_user

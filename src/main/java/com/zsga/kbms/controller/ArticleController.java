@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.zsga.kbms.entity.Article;
+import com.zsga.kbms.entity.User;
 import com.zsga.kbms.lucene.ArticleIndex;
 import com.zsga.kbms.service.ArticleService;
 import com.zsga.kbms.service.CommentService;
@@ -49,24 +50,33 @@ public class ArticleController {
 	public ModelAndView details(@PathVariable("id")Integer id,HttpServletRequest request) throws Exception {
 		ModelAndView mav=new ModelAndView();
 		Article article = articleService.findArticleById(id);
-		String keyWords=article.getKeyWord();
-		if(StringUtil.isNotEmpty(keyWords)){
-			String arr[]=keyWords.split(" ");
-			mav.addObject("keyWords",StringUtil.filterWhite(Arrays.asList(arr)));			
-		}else{
-			mav.addObject("keyWords",null);			
+		//获取文章类型ID
+		Integer articleTypeId = article.getArticleType().getId();
+		User currentUser = (User) request.getSession().getAttribute("currentUser");
+		String role = currentUser.getRole();
+		if (role.contains(Integer.toString(articleTypeId))) {  //有权查看
+			String keyWords=article.getKeyWord();
+			if(StringUtil.isNotEmpty(keyWords)){
+				String arr[]=keyWords.split(" ");
+				mav.addObject("keyWords",StringUtil.filterWhite(Arrays.asList(arr)));			
+			}else{
+				mav.addObject("keyWords",null);			
+			}
+			mav.addObject("article", article);
+			article.setClickHit(article.getClickHit()+1); // 文章点击次数加1
+			articleService.editArticle(article);
+			Map<String,Object> map=new HashMap<String,Object>();
+			map.put("articleId", article.getId());
+			//map.put("state", 1); // 查询审核通过的评论
+			mav.addObject("commentList", commentService.list(map)); 
+			mav.addObject("pageCode", this.genUpAndDownPageCode(articleService.getLastArticle(id),articleService.getNextArticle(id),request.getServletContext().getContextPath()));
+			mav.addObject("mainPage", "foreground/article/view.jsp");
+			mav.addObject("pageTitle",article.getTitle()+"_知识库系统");
+			mav.setViewName("mainTemp");
+		} else { //无权限查看
+			mav.setViewName("noaccess");
 		}
-		mav.addObject("article", article);
-		article.setClickHit(article.getClickHit()+1); // 文章点击次数加1
-		articleService.editArticle(article);
-		Map<String,Object> map=new HashMap<String,Object>();
-		map.put("articleId", article.getId());
-		//map.put("state", 1); // 查询审核通过的评论
-		mav.addObject("commentList", commentService.list(map)); 
-		mav.addObject("pageCode", this.genUpAndDownPageCode(articleService.getLastArticle(id),articleService.getNextArticle(id),request.getServletContext().getContextPath()));
-		mav.addObject("mainPage", "foreground/article/view.jsp");
-		mav.addObject("pageTitle",article.getTitle()+"_知识库系统");
-		mav.setViewName("mainTemp");
+		
 		return mav;
 	}
 	

@@ -2,6 +2,7 @@ package com.zsga.kbms.service;
 
 import java.util.List;
 
+import com.github.pagehelper.PageInfo;
 import com.zsga.kbms.entity.User;
 
 /**
@@ -16,6 +17,20 @@ public interface UserService {
 	 * @return
 	 */
 	public User find();
+	
+	/**
+	 * 根据用户ID添加权限
+	 * @param user
+	 * @return
+	 */
+	public int addRoles(User user);
+	
+	/**
+	 * 根据用户ID查询用户信息
+	 * @param id
+	 * @return
+	 */
+	public User findUserById(Integer id);
 	
 	/**
 	 * 根据用户名和密码查询用户信息
@@ -35,5 +50,5 @@ public interface UserService {
 	 * 获取所有用户
 	 * @return
 	 */
-	public List<User> getUsers();
+	public PageInfo<User> getUsers(Integer page, Integer rows);
 }

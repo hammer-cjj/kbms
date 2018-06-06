@@ -14,6 +14,7 @@ public class User {
 	private String imageName; //头像
 	private String sign;      //个性签名
 	private Integer manage;   //0：普通用户；1：管理员
+	private String role;      //权限
 	public Integer getId() {
 		return id;
 	}
@@ -62,5 +63,10 @@ public class User {
 	public void setManage(Integer manage) {
 		this.manage = manage;
 	}
-	
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
+	}
 }
